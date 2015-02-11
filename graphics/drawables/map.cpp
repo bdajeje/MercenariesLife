@@ -9,7 +9,8 @@
 namespace graphics {
 
 Map::Map(unsigned int window_width, unsigned int window_height, const std::string& map_filepath)
-  : m_view( sf::Vector2f{window_width / 2.f, window_height / 2.f}, sf::Vector2f{(float)window_width, (float)window_height} )
+  : m_view{ sf::Vector2f{window_width / 2.f, window_height / 2.f}, sf::Vector2f{(float)window_width, (float)window_height} }
+  , m_view_movement_destination{ m_view.getCenter() }
 {
   // Read file
   std::string map_file_content;
@@ -50,7 +51,7 @@ Map::Map(unsigned int window_width, unsigned int window_height, const std::strin
     row.resize(width);
 
   // Add tiles
-  const auto tile_size = utils::GameConfig::getMapTileSize();
+  const auto tile_size = utils::GameConfig::mapTileSize();
   const size_t tiles_start_pos = 2;
   for( size_t y = 0; y < height; ++y )
   {
@@ -80,29 +81,58 @@ void Map::draw(sf::RenderTarget& target)
     for( auto& sprite : row_of_sprites )
       target.draw(sprite);
   }
+
+  smoothViewMoveToDestination();
 }
 
 void Map::move(int x, int y)
 {
   // Check last move call wasn't too close in time
-  if( !isMovementAllowed() )
+  if( isMoving() )
     return;
 
-  // Move the view
-  const int tile_size = utils::GameConfig::getMapTileSize();
-  m_view.move( x * tile_size, y * tile_size );
-
-  // Register last move time
+  // Set a destination to smootly reach and restart move clock
+  const int tile_size = utils::GameConfig::mapTileSize();
+  const auto& view_position = m_view.getCenter();
+  m_view_movement_destination.x = view_position.x + x * tile_size;
+  m_view_movement_destination.y = view_position.y + y * tile_size;
   m_movement_clock.restart();
 }
 
-bool Map::isMovementAllowed() const
+bool Map::isMoving() const
 {
-  // utils::GameConfig::getMapMovementSpeed() returns speed per seconds
-  // So here we find one movement duration to test if last movement time isn't too current time
-  const float movement_duration = 1000.0 / utils::GameConfig::getMapMovementSpeed();
+  return m_view_movement_destination != m_view.getCenter();
+}
 
-  return m_movement_clock.getElapsedTime().asMilliseconds() >= movement_duration ? true : false;
+void Map::smoothViewMoveToDestination()
+{
+  // Not moving? Nothing to do
+  if(!isMoving())
+    return;
+
+  // Calcul how many pixel we have to move depending on elapsed time
+  const sf::Time elasped_time  = m_movement_clock.restart();
+  const float tiles_per_second = utils::GameConfig::mapMovementTilesPerSecond();
+  float distance_in_tiles      = elasped_time.asMilliseconds() * (tiles_per_second / 1000); // distance = speed * time
+  float distance_in_pixels     = distance_in_tiles * utils::GameConfig::mapTileSize();
+
+  // Find which way to go
+  const sf::Vector2f& view_position = m_view.getCenter();
+  float x_move = 0;
+  float y_move = 0;
+  if( view_position.x != m_view_movement_destination.x )
+    x_move = (view_position.x < m_view_movement_destination.x) ? distance_in_pixels : -distance_in_pixels;
+  if( view_position.y != m_view_movement_destination.y )
+    y_move = (view_position.y < m_view_movement_destination.y) ? distance_in_pixels : -distance_in_pixels;
+
+  // Finally move the view
+  // If remaining distance is inferior to move_x simply directly position the view on target destination
+  const float remaining_x_distance = std::abs(view_position.x - m_view_movement_destination.x);
+  const float remaining_y_distance = std::abs(view_position.y - m_view_movement_destination.y);
+  if( remaining_x_distance < x_move || remaining_y_distance < y_move )
+    m_view.setCenter( m_view_movement_destination );
+  else
+    m_view.move( x_move, y_move );
 }
 
 }

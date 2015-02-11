@@ -26,7 +26,7 @@ int main()
   graphics::Textures::init("resources/images/");
   graphics::Map map {window_width, window_height, "resources/maps/1"};
 
-  const float map_tile_size = GameConfig::getMapTileSize();
+  const float map_tile_size = GameConfig::mapTileSize();
   models::Player player {"player", { (window_width - map_tile_size) / 2, (window_height - map_tile_size) / 2 }};
 
   // Main loop

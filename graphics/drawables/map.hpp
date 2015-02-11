@@ -2,6 +2,7 @@
 #define GRAPHICS_MAP_HPP
 
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <SFML/Graphics.hpp>
@@ -44,10 +45,15 @@ class Map
      */
     void setTitle(const std::string& map_title);
 
-    /*! Is a new move of the view allowed?
-     * \returns true if we are allowed to move the view depending on time of last move
+    /*! Is the view moving to a destination
+     * \returns true if the view is actually reaching a destination
      */
-    bool isMovementAllowed() const;
+    bool isMoving() const;
+
+    /*! Smootly move the view to a target destination
+     *  This method is called at each frame to create a smooth movement
+     */
+    void smoothViewMoveToDestination();
 
   private:
 
@@ -62,6 +68,9 @@ class Map
 
     /*! Clock dedicated to view movement limits */
     sf::Clock m_movement_clock;
+
+    /*! When triggering a move, the view will smootly reach this destination */
+    sf::Vector2f m_view_movement_destination;
 };
 
 }
