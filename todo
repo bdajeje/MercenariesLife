@@ -1,0 +1,3 @@
+play with sf::View
+minimap
+smart map draw (do not draw the entire map every frame)
