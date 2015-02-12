@@ -7,8 +7,8 @@
 namespace graphics {
 
 const std::map<unsigned int, std::string> Textures::IdToName {
-  {0, "map/sand.jpg"},
-  {1, "map/plateform.jpg"}
+  {0, "map/plateform.jpg"},
+  {1, "map/sand.jpg"}
 };
 
 std::unique_ptr<Textures> Textures::s_instance;

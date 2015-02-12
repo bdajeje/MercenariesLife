@@ -3,14 +3,14 @@
 #include <boost/algorithm/string.hpp>
 
 #include "graphics/textures.hpp"
+#include "utils/conversions.hpp"
 #include "utils/files/file.hpp"
 #include "utils/resources/game_config.hpp"
 
 namespace graphics {
 
-Map::Map(unsigned int window_width, unsigned int window_height, const std::string& map_filepath)
-  : m_view{ sf::Vector2f{window_width / 2.f, window_height / 2.f}, sf::Vector2f{(float)window_width, (float)window_height} }
-  , m_view_movement_destination{ m_view.getCenter() }
+Map::Map(unsigned int window_width, unsigned int window_height, unsigned int tile_size, const std::string& map_filepath)
+  : m_tile_size {tile_size}
 {
   // Read file
   std::string map_file_content;
@@ -24,26 +24,27 @@ Map::Map(unsigned int window_width, unsigned int window_height, const std::strin
   std::vector<std::string> lines;
   boost::algorithm::split(lines, map_file_content, boost::is_any_of("\n"));
 
-  // Check minimum mandatory number of lines
-  if( lines.size() < 3 )
-  {
-    std::cerr << "Wrong map file format (1)" << std::endl;
-    throw;
-  }
+  // Currently read line
+  size_t line_offset = 0;
 
   // Start interpreting the lines
-  setTitle(lines.at(0));
+  setTitle(lines.at( line_offset++ ));
+
+  // Common container for line parts
+  std::vector<std::string> parts;
+
+  // Read starting positions
+  boost::algorithm::split(parts, lines.at(line_offset++), boost::is_any_of(" "));
+  m_tile_position.x = std::stoi( parts[0] );
+  m_tile_position.y = std::stoi( parts[1] );
+
+  // Init view
+  m_view = sf::View{ tileCenterPositionInPixel(m_tile_position), sf::Vector2f{(float)window_width, (float)window_height} };
 
   // Read sizes of the map
-  std::vector<std::string> map_sizes;
-  boost::algorithm::split(map_sizes, lines.at(1), boost::is_any_of(" "));
-  if(map_sizes.size() != 2)
-  {
-    std::cerr << "Wrong map file format (2)" << std::endl;
-    throw;
-  }
-  size_t width  = std::stoi(map_sizes.at(0));
-  size_t height = std::stoi(map_sizes.at(1));
+  boost::algorithm::split(parts, lines.at(line_offset++), boost::is_any_of(" "));
+  size_t width  = std::stoi(parts.at(0));
+  size_t height = std::stoi(parts.at(1));
 
   // Reserve map size
   m_tiles.resize(height);
@@ -51,22 +52,30 @@ Map::Map(unsigned int window_width, unsigned int window_height, const std::strin
     row.resize(width);
 
   // Add tiles
-  const auto tile_size = utils::GameConfig::mapTileSize();
-  const size_t tiles_start_pos = 2;
   for( size_t y = 0; y < height; ++y )
   {
     for( size_t x = 0; x < width; ++x )
     {
-      auto& sprite  = m_tiles[y][x];
-      auto texture_id = std::stoi( lines.at(y * width + x + tiles_start_pos) );
-      auto& texture = *Textures::get( texture_id );
+      const std::string& line = lines.at(line_offset++);
+      boost::algorithm::split(parts, line, boost::is_any_of(" "));
 
-      sprite.setTexture( texture );
-      sprite.setScale((float)tile_size / texture.getSize().x,
-                      (float)tile_size / texture.getSize().y);
-      sprite.setPosition(x * tile_size, y * tile_size);
+      auto& tile      = m_tiles[y][x];
+      auto texture_id = std::stoi( parts[0] );
+      auto& texture   = *Textures::get( texture_id );
+
+      tile.sprite.setTexture( texture );
+      tile.sprite.setScale((float)m_tile_size / texture.getSize().x,
+                           (float)m_tile_size / texture.getSize().y);
+      tile.sprite.setPosition(x * m_tile_size, y * m_tile_size);
+      tile.blocking = utils::conversions::boolean( parts[1] );
     }
   }
+}
+
+sf::Vector2f Map::tileCenterPositionInPixel(const utils::Position& tile_position) const
+{
+  static const float offset = m_tile_size / 2.f;
+  return { tile_position.x * m_tile_size + offset, tile_position.y * m_tile_size + offset };
 }
 
 void Map::setTitle(const std::string& map_title)
@@ -76,10 +85,10 @@ void Map::setTitle(const std::string& map_title)
 
 void Map::draw(sf::RenderTarget& target)
 {
-  for( auto& row_of_sprites : m_tiles )
+  for( auto& row_of_tiles : m_tiles )
   {
-    for( auto& sprite : row_of_sprites )
-      target.draw(sprite);
+    for( auto& tile : row_of_tiles )
+      target.draw(tile.sprite);
   }
 
   smoothViewMoveToDestination();
@@ -91,17 +100,33 @@ void Map::move(int x, int y)
   if( isMoving() )
     return;
 
-  // Set a destination to smootly reach and restart move clock
-  const int tile_size = utils::GameConfig::mapTileSize();
-  const auto& view_position = m_view.getCenter();
-  m_view_movement_destination.x = view_position.x + x * tile_size;
-  m_view_movement_destination.y = view_position.y + y * tile_size;
+  // Check destination is reachabled
+  const auto new_pos_x = m_tile_position.x + x;
+  const auto new_pos_y = m_tile_position.y + y;
+  if( !canMoveTo(new_pos_x, new_pos_y) )
+    return;
+
+  // Set new position
+  m_tile_position.x = new_pos_x;
+  m_tile_position.y = new_pos_y;
   m_movement_clock.restart();
+}
+
+bool Map::canMoveTo(int x, int y) const
+{
+  if( y < 0 || (size_t)y >= m_tiles.size() )
+    return false;
+
+  const auto& row_of_tiles = m_tiles.at(y);
+  if( x < 0 || (size_t)x >= row_of_tiles.size() )
+    return false;
+
+  return !row_of_tiles.at(x).blocking;
 }
 
 bool Map::isMoving() const
 {
-  return m_view_movement_destination != m_view.getCenter();
+  return tileCenterPositionInPixel(m_tile_position) != m_view.getCenter();
 }
 
 void Map::smoothViewMoveToDestination()
@@ -114,23 +139,24 @@ void Map::smoothViewMoveToDestination()
   const sf::Time elasped_time  = m_movement_clock.restart();
   const float tiles_per_second = utils::GameConfig::mapMovementTilesPerSecond();
   float distance_in_tiles      = elasped_time.asMilliseconds() * (tiles_per_second / 1000); // distance = speed * time
-  float distance_in_pixels     = distance_in_tiles * utils::GameConfig::mapTileSize();
+  float distance_in_pixels     = distance_in_tiles * m_tile_size;
 
   // Find which way to go
   const sf::Vector2f& view_position = m_view.getCenter();
   float x_move = 0;
   float y_move = 0;
-  if( view_position.x != m_view_movement_destination.x )
-    x_move = (view_position.x < m_view_movement_destination.x) ? distance_in_pixels : -distance_in_pixels;
-  if( view_position.y != m_view_movement_destination.y )
-    y_move = (view_position.y < m_view_movement_destination.y) ? distance_in_pixels : -distance_in_pixels;
+  const sf::Vector2f view_movement_destination = tileCenterPositionInPixel(m_tile_position);
+  if( view_position.x != view_movement_destination.x )
+    x_move = (view_position.x < view_movement_destination.x) ? distance_in_pixels : -distance_in_pixels;
+  if( view_position.y != view_movement_destination.y )
+    y_move = (view_position.y < view_movement_destination.y) ? distance_in_pixels : -distance_in_pixels;
 
   // Finally move the view
   // If remaining distance is inferior to move_x simply directly position the view on target destination
-  const float remaining_x_distance = std::abs(view_position.x - m_view_movement_destination.x);
-  const float remaining_y_distance = std::abs(view_position.y - m_view_movement_destination.y);
+  const float remaining_x_distance = std::abs(view_position.x - view_movement_destination.x);
+  const float remaining_y_distance = std::abs(view_position.y - view_movement_destination.y);
   if( remaining_x_distance < x_move || remaining_y_distance < y_move )
-    m_view.setCenter( m_view_movement_destination );
+    m_view.setCenter( view_movement_destination );
   else
     m_view.move( x_move, y_move );
 }

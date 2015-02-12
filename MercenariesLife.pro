@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     models/character.cpp \
     models/player.cpp \
     graphics/drawables/map_character.cpp \
-    utils/resources/game_config.cpp
+    utils/resources/game_config.cpp \
+    utils/conversions.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -29,4 +30,5 @@ HEADERS += \
     models/character.hpp \
     models/player.hpp \
     graphics/drawables/map_character.hpp \
-    utils/resources/game_config.hpp
+    utils/resources/game_config.hpp \
+    utils/conversions.hpp
