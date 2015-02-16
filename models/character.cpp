@@ -2,8 +2,8 @@
 
 namespace models {
 
-Character::Character(const std::string& info_filepath)
-  : m_name {info_filepath}
+Character::Character(const std::string& info_filename)
+  : m_name {"resources/characters/" + info_filename}
 {
 }
 

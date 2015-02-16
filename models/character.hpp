@@ -11,9 +11,9 @@ class Character
 
     /*!
      * \brief Character constructor from a file informatioon
-     * \param info_filepath - file where to find character informations
+     * \param info_filename - file where to find character informations
      */
-    Character(const std::string& info_filepath);
+    Character(const std::string& info_filename);
 
   protected:
 

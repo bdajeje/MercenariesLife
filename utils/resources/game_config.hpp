@@ -22,7 +22,7 @@ class GameConfig final
     static void init();
 
     /*! Get map tile size */
-    static unsigned int mapTileSize() { return s_instance->m_map_tile_size; }
+    //static float mapTileSize() { return s_instance->m_map_tile_size; }
 
     /*! Get keyboard key from a keyboard action */
     static sf::Keyboard::Key keyboardKey(KeyboardActions action) { return s_instance->m_key_bingings[action]; }
@@ -37,7 +37,7 @@ class GameConfig final
   private:
 
     /*! Size (width and height) of a map tile */
-    unsigned int m_map_tile_size {75};
+    //float m_map_tile_size {75};
 
     /*! Speed of map movement in tiles per second */
     float m_map_movement_speed {3};

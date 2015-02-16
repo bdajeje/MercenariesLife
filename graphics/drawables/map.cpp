@@ -9,8 +9,7 @@
 
 namespace graphics {
 
-Map::Map(unsigned int window_width, unsigned int window_height, unsigned int tile_size, const std::string& map_filepath)
-  : m_tile_size {tile_size}
+Map::Map(const std::string& map_filepath)
 {
   // Read file
   std::string map_file_content;
@@ -39,7 +38,7 @@ Map::Map(unsigned int window_width, unsigned int window_height, unsigned int til
   m_tile_position.y = std::stoi( parts[1] );
 
   // Init view
-  m_view = sf::View{ tileCenterPositionInPixel(m_tile_position), sf::Vector2f{(float)window_width, (float)window_height} };
+  m_view.setCenter(tileCenterPositionInPixel(m_tile_position));
 
   // Read sizes of the map
   boost::algorithm::split(parts, lines.at(line_offset++), boost::is_any_of(" "));
@@ -64,8 +63,8 @@ Map::Map(unsigned int window_width, unsigned int window_height, unsigned int til
       auto& texture   = *Textures::get( texture_id );
 
       tile.sprite.setTexture( texture );
-      tile.sprite.setScale((float)m_tile_size / texture.getSize().x,
-                           (float)m_tile_size / texture.getSize().y);
+      tile.sprite.setScale(m_tile_size / texture.getSize().x,
+                           m_tile_size / texture.getSize().y);
       tile.sprite.setPosition(x * m_tile_size, y * m_tile_size);
       tile.blocking = utils::conversions::boolean( parts[1] );
     }
@@ -85,6 +84,8 @@ void Map::setTitle(const std::string& map_title)
 
 void Map::draw(sf::RenderTarget& target)
 {
+  target.setView(m_view);
+
   for( auto& row_of_tiles : m_tiles )
   {
     for( auto& tile : row_of_tiles )
@@ -94,22 +95,24 @@ void Map::draw(sf::RenderTarget& target)
   smoothViewMoveToDestination();
 }
 
-void Map::move(int x, int y)
+bool Map::move(int x, int y)
 {
   // Check last move call wasn't too close in time
   if( isMoving() )
-    return;
+    return false;
 
   // Check destination is reachabled
   const auto new_pos_x = m_tile_position.x + x;
   const auto new_pos_y = m_tile_position.y + y;
   if( !canMoveTo(new_pos_x, new_pos_y) )
-    return;
+    return false;
 
   // Set new position
   m_tile_position.x = new_pos_x;
   m_tile_position.y = new_pos_y;
   m_movement_clock.restart();
+
+  return true;
 }
 
 bool Map::canMoveTo(int x, int y) const
@@ -159,6 +162,12 @@ void Map::smoothViewMoveToDestination()
     m_view.setCenter( view_movement_destination );
   else
     m_view.move( x_move, y_move );
+}
+
+unsigned int Map::timeTakenToMove() const
+{
+  const static unsigned int time_taken = 1000.f / utils::GameConfig::mapMovementTilesPerSecond();
+  return time_taken;
 }
 
 }

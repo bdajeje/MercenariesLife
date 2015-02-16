@@ -4,11 +4,11 @@
 
 namespace models {
 
-Player::Player(const std::string& info_filepath, sf::Vector2f position_on_screen)
-  : Character {info_filepath}
-  , MapCharacter {*graphics::Textures::get("characters/players/test.png")}
+Player::Player(const std::string& info_filename, const sf::Vector2f& position, const sf::Vector2f& size)
+  : Character {info_filename}
+  , MapCharacter {info_filename, position, size}
 {
-  setPosition( position_on_screen );
+
 }
 
 }

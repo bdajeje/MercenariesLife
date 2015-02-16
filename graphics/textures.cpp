@@ -35,7 +35,7 @@ const sf::Texture* Textures::get(const std::string& name)
 {
   if(!s_instance)
   {
-    std::cerr << "Triyng to use an uninitailized resources manager!" << std::endl;
+    std::cerr << "Trying to use an uninitailized textures manager!" << std::endl;
     return nullptr;
   }
 

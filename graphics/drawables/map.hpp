@@ -26,13 +26,10 @@ class Map
 
     /*!
      * \brief Constructor with a specific file with information of the map
-     * \param window_width  - width of the window
-     * \param window_height - height of the window
-     * \param tile_size     - widht and height of a tile
-     * \param map_filepath  - file to read to get information about the map
+     * \param map_filepath - file to read to get information about the map
      * \throw on error
      */
-    Map(unsigned int window_width, unsigned int window_height, unsigned int tile_size, const std::string& map_filepath);
+    Map(const std::string& map_filepath);
 
     /*! Draw the map
      * \param target - where to draw
@@ -45,8 +42,22 @@ class Map
     /*! Move the view of the map
      * \param x - movement on the X axe
      * \param y - movement on the Y axe
+     * \return true if movement is allowed
      */
-    void move(int x, int y);
+    bool move(int x, int y);
+
+    /*! Get time taken in milliseconds to move from a tile to another
+     *  \return time taken in milliseconds to move from a tile to another
+     */
+    unsigned int timeTakenToMove() const;
+
+    /*! Get tile size */
+    float tileSize() const { return m_tile_size; }
+
+    /*! Is the view moving to a destination
+     * \returns true if the view is actually reaching a destination
+     */
+    bool isMoving() const;
 
   protected:
 
@@ -54,11 +65,6 @@ class Map
      * \param map_title - to set
      */
     void setTitle(const std::string& map_title);
-
-    /*! Is the view moving to a destination
-     * \returns true if the view is actually reaching a destination
-     */
-    bool isMoving() const;
 
     /*! Can we move to destination
      * \returns true if we can move to destination
@@ -80,7 +86,7 @@ class Map
   private:
 
     /*! Width/Height of a tile */
-    const unsigned int m_tile_size {75};
+    const float m_tile_size {75};
 
     /*! Map title */
     std::string m_title;
