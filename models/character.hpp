@@ -11,14 +11,20 @@ class Character
 
     /*!
      * \brief Character constructor from a file informatioon
-     * \param info_filename - file where to find character informations
+     * \param id - if of the character
      */
-    Character(const std::string& info_filename);
+    Character(const std::string& id);
+
+    /*! ID getter */
+    const std::string& getID() const { return m_id; }
 
   protected:
 
     /*! Name */
     std::string m_name;
+
+    /*! Unique ID */
+    std::string m_id;
 };
 
 }

@@ -11,7 +11,7 @@ namespace utils {
 /*! Every possible keyboard actions */
 enum class KeyboardActions
 {
-  MapMoveUp, MapMoveDown, MapMoveLeft, MapMoveRight
+  MapMoveUp, MapMoveDown, MapMoveLeft, MapMoveRight, MapPlayerInteraction
 };
 
 class GameConfig final

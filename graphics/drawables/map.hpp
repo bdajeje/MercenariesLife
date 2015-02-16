@@ -46,6 +46,17 @@ class Map final
      */
     bool move(int x, int y);
 
+    /*! Player interacts with a tile
+     *  \param direction - of the interactions, usefull to know which tile is targeted
+     */
+    void playerInteraction(utils::Direction direction);
+
+    /*! Set map focused
+     * \param focused - value to set
+     * \note an unfocused map will ignore events like move
+     */
+    void setFocused(bool focused) { m_focused = focused; }
+
     /*! Get time taken in milliseconds to move from a tile to another
      *  \return time taken in milliseconds to move from a tile to another
      */
@@ -57,10 +68,19 @@ class Map final
     /*! Get map name */
     const std::string& name() const { return m_map_name; }
 
+    /*! Get PNJ in a direction from current position
+     *  \param direction - where to search
+     *  \return found pnj or nullptr
+     */
+    std::shared_ptr<models::PNJ> getPNJ(utils::Direction direction) const;
+
     /*! Is the view moving to a destination
      * \returns true if the view is actually reaching a destination
      */
     bool isMoving() const;
+
+    /*! Is the map currently focused */
+    bool isFocused() const { return m_focused; }
 
   private:
 
@@ -73,6 +93,9 @@ class Map final
      * \returns true if we can move to destination
      */
     bool canMoveTo(int x, int y) const;
+
+    /*! Does a specific couple of x/y targets a valid tile */
+    bool isValidPosition(int x, int y) const;
 
     /*! Smootly move the view to a target destination
      *  This method is called at each frame to create a smooth movement
@@ -99,6 +122,9 @@ class Map final
     void loadPNJs(const std::string& pnjs_filepath);
 
   private:
+
+    /*! Is the map focused */
+    bool m_focused {true};
 
     /*! Width/Height of a tile */
     const float m_tile_size {75};

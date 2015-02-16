@@ -2,8 +2,9 @@
 
 namespace models {
 
-Character::Character(const std::string& info_filename)
-  : m_name {"resources/characters/" + info_filename}
+Character::Character(const std::string& id)
+  : m_name {"todo"}
+  , m_id {id}
 {
 }
 

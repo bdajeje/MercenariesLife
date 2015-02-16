@@ -15,7 +15,9 @@ SOURCES += main.cpp \
     graphics/drawables/animation.cpp \
     graphics/drawables/user_interface.cpp \
     graphics/fonts.cpp \
-    models/pnj.cpp
+    models/pnj.cpp \
+    events/events.cpp \
+    models/conversation.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -36,4 +38,6 @@ HEADERS += \
     utils/direction.hpp \
     graphics/drawables/user_interface.hpp \
     graphics/fonts.hpp \
-    models/pnj.hpp
+    models/pnj.hpp \
+    events/events.hpp \
+    models/conversation.hpp

@@ -19,6 +19,9 @@ GameConfig::GameConfig()
   m_key_bingings[KeyboardActions::MapMoveDown] = sf::Keyboard::Down;
   m_key_bingings[KeyboardActions::MapMoveLeft] = sf::Keyboard::Left;
   m_key_bingings[KeyboardActions::MapMoveRight] = sf::Keyboard::Right;
+
+  // Map interaction
+  m_key_bingings[KeyboardActions::MapPlayerInteraction] = sf::Keyboard::Space;
 }
 
 }

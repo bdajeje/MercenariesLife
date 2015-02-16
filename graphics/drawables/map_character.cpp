@@ -36,6 +36,18 @@ void MapCharacter::setDirection(utils::Direction direction)
   }
 }
 
+utils::Direction MapCharacter::direction() const
+{
+  if( m_current_animation == &m_move_top_animation )
+    return utils::Direction::Up;
+  else if( m_current_animation == &m_move_down_animation )
+    return utils::Direction::Down;
+  else if( m_current_animation == &m_move_left_animation )
+    return utils::Direction::Left;
+  else
+    return utils::Direction::Right;
+}
+
 void MapCharacter::move(unsigned int animation_time)
 {
   m_current_animation->start( animation_time, false );

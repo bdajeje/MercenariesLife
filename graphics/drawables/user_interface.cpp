@@ -18,4 +18,13 @@ void UserInterface::draw(sf::RenderTarget& target)
   target.draw(m_map_name);
 }
 
+bool UserInterface::startConversation(std::shared_ptr<models::PNJ> pnj)
+{
+  if(!pnj)
+    return false;
+
+  m_conversation = models::Conversation::loadConversation(pnj->getID());
+  return true;
+}
+
 }

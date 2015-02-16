@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_MAP_CHARACTER_HPP
 #define GRAPHICS_MAP_CHARACTER_HPP
 
+#include <memory>
+
 #include <SFML/Graphics.hpp>
 
 #include "graphics/drawables/animation.hpp"
@@ -34,6 +36,9 @@ class MapCharacter
      *  \param direction - direction of the move
      */
     void setDirection(utils::Direction direction);
+
+    /*! Direction getter */
+    utils::Direction direction() const;
 
     /*! Does the character currently moving? */
     bool isMoving() const { return m_current_animation->isRunning(); }

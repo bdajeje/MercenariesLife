@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include "events/events.hpp"
 #include "graphics/textures.hpp"
 #include "utils/conversions.hpp"
 #include "utils/files/file.hpp"
@@ -143,7 +144,7 @@ void Map::draw(sf::RenderTarget& target, models::Player& player, const sf::View&
 bool Map::move(int x, int y)
 {
   // Check last move call wasn't too close in time
-  if( isMoving() )
+  if( !isFocused() || isMoving() )
     return false;
 
   // Check destination is reachabled
@@ -160,7 +161,7 @@ bool Map::move(int x, int y)
   return true;
 }
 
-bool Map::canMoveTo(int x, int y) const
+bool Map::isValidPosition(int x, int y) const
 {
   // Out of Y bounds
   if( y < 0 || (size_t)y >= m_tiles.size() )
@@ -171,11 +172,20 @@ bool Map::canMoveTo(int x, int y) const
   if( x < 0 || (size_t)x >= row_of_tiles.size() )
     return false;
 
-  // PNJ on this tile (can't move onto a PNJ)
-  if( m_tiles[y][x].pnj )
+  return true;
+}
+
+bool Map::canMoveTo(int x, int y) const
+{
+  if(!isValidPosition(x,y))
     return false;
 
-  return !row_of_tiles.at(x).blocking;
+  // PNJ on this tile (can't move onto a PNJ)
+  const Tile& tile = m_tiles[y][x];
+  if( tile.pnj )
+    return false;
+
+  return !tile.blocking;
 }
 
 bool Map::isMoving() const
@@ -219,6 +229,34 @@ unsigned int Map::timeTakenToMove() const
 {
   const static unsigned int time_taken = 1000.f / utils::GameConfig::mapMovementTilesPerSecond();
   return time_taken;
+}
+
+void Map::playerInteraction(utils::Direction direction)
+{
+  auto pnj = getPNJ(direction);
+  if( pnj )
+    events::Events::addEvent( events::Type::TalkToPNJ );
+}
+
+std::shared_ptr<models::PNJ> Map::getPNJ(utils::Direction direction) const
+{
+  // Calculate which tile is targeted
+  int x = m_tile_position.x;
+  int y = m_tile_position.y;
+  if( direction == utils::Direction::Left )
+    x--;
+  else if( direction == utils::Direction::Right )
+    x++;
+  if( direction == utils::Direction::Up )
+    y--;
+  else if( direction == utils::Direction::Down )
+    y++;
+
+  // Bounds verification
+  if( !isValidPosition(x, y) )
+    return nullptr;
+
+  return m_tiles[y][x].pnj;
 }
 
 }
