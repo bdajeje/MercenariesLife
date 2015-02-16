@@ -9,13 +9,10 @@
 
 namespace graphics {
 
-const std::map<unsigned int, std::string> Map::IdToTileInfo {
-  {0, "map/plateform.jpg"},
-  {1, "map/sand.jpg"}
-};
-
-Map::Map(const std::string& map_filepath)
+Map::Map(const std::string& map_name)
 {
+  const std::string map_filepath = "resources/maps/" + map_name;
+
   // Read file
   std::string map_file_content;
   if( !utils::files::read(map_filepath, map_file_content) )
@@ -50,7 +47,11 @@ Map::Map(const std::string& map_filepath)
   size_t width  = std::stoi(parts.at(0));
   size_t height = std::stoi(parts.at(1));
 
-  // Reserve map size
+  // Create the map texture and sprite
+  m_map_texture.loadFromFile(map_filepath + ".png");
+  m_map_sprite.setTexture(m_map_texture);
+
+  // Now load tiles
   m_tiles.resize(height);
   for( auto& row : m_tiles )
     row.resize(width);
@@ -59,19 +60,7 @@ Map::Map(const std::string& map_filepath)
   for( size_t y = 0; y < height; ++y )
   {
     for( size_t x = 0; x < width; ++x )
-    {
-      const std::string& line = lines.at(line_offset++);
-      boost::algorithm::split(parts, line, boost::is_any_of(" "));
-
-      auto& tile      = m_tiles[y][x];
-      auto texture_id = std::stoi( parts[0] );
-      auto& texture   = *Textures::get(IdToTileInfo.at(texture_id));
-
-      tile.sprite.setTexture( texture );
-      tile.sprite.setScale(m_tile_size / texture.getSize().x, m_tile_size / texture.getSize().y);
-      tile.sprite.setPosition(x * m_tile_size, y * m_tile_size);
-      tile.blocking = utils::conversions::boolean( parts[1] );
-    }
+      m_tiles[y][x].blocking = utils::conversions::boolean( lines.at((line_offset++)) );
   }
 }
 
@@ -89,12 +78,7 @@ void Map::setTitle(const std::string& map_title)
 void Map::draw(sf::RenderTarget& target)
 {
   target.setView(m_view);
-
-  for( auto& row_of_tiles : m_tiles )
-  {
-    for( auto& tile : row_of_tiles )
-      target.draw(tile.sprite);
-  }
+  target.draw(m_map_sprite);
 
   smoothViewMoveToDestination();
 }

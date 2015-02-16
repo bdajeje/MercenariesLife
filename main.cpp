@@ -60,7 +60,7 @@ int main()
 
   GameConfig::init();
   graphics::Textures::init("resources/images/");
-  graphics::Map map {"resources/maps/1"};
+  graphics::Map map {"1"};
 
   models::Player player {"player", {map.tileSize() / 2, map.tileSize() / 2}, {map.tileSize(), map.tileSize()}};
 

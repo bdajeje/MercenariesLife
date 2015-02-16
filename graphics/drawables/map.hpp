@@ -11,13 +11,11 @@
 
 namespace graphics {
 
+/*! Holds tile information */
 struct Tile
 {
   /*! Can we move onto this tile */
   bool blocking {false};
-
-  /*! Sprite of the tile */
-  sf::Sprite sprite;
 };
 
 class Map
@@ -26,10 +24,10 @@ class Map
 
     /*!
      * \brief Constructor with a specific file with information of the map
-     * \param map_filepath - file to read to get information about the map
+     * \param map_name - name of the map to load
      * \throw on error
      */
-    Map(const std::string& map_filepath);
+    Map(const std::string& map_name);
 
     /*! Draw the map
      * \param target - where to draw
@@ -88,6 +86,12 @@ class Map
     /*! Width/Height of a tile */
     const float m_tile_size {75};
 
+    /*! Map texture */
+    sf::Texture m_map_texture;
+
+    /*! Map sprite */
+    sf::Sprite m_map_sprite;
+
     /*! Map title */
     std::string m_title;
 
@@ -102,8 +106,6 @@ class Map
 
     /*! Clock dedicated to view movement limits */
     sf::Clock m_movement_clock;
-
-    static const std::map<unsigned int, std::string> IdToTileInfo;
 };
 
 }
