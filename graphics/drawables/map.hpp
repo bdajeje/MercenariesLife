@@ -102,6 +102,8 @@ class Map
 
     /*! Clock dedicated to view movement limits */
     sf::Clock m_movement_clock;
+
+    static const std::map<unsigned int, std::string> IdToTileInfo;
 };
 
 }

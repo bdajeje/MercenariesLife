@@ -1,5 +1,6 @@
 #include "map_character.hpp"
 
+#include "graphics/textures.hpp"
 #include "utils/resources/game_config.hpp"
 
 #include <iostream>
@@ -7,10 +8,10 @@
 namespace graphics {
 
 MapCharacter::MapCharacter(const std::string& texture_directory, const sf::Vector2f& position, const sf::Vector2f size)
-  : m_move_top_animation { "characters/" + texture_directory + "/move_top.png", size, 4 }
-  , m_move_down_animation { "characters/" + texture_directory + "/move_bottom.png", size, 4 }
-  , m_move_left_animation { "characters/" + texture_directory + "/move_left.png", size, 4 }
-  , m_move_right_animation { "characters/" + texture_directory + "/move_right.png", size, 4 }
+  : m_move_top_animation { *Textures::get("characters/" + texture_directory + "/move_top.png"), size, 4 }
+  , m_move_down_animation { *Textures::get("characters/" + texture_directory + "/move_bottom.png"), size, 4 }
+  , m_move_left_animation { *Textures::get("characters/" + texture_directory + "/move_left.png"), size, 4 }
+  , m_move_right_animation { *Textures::get("characters/" + texture_directory + "/move_right.png"), size, 4 }
   , m_current_animation { &m_move_down_animation }
 {
   m_view.setCenter( position );

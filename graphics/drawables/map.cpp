@@ -9,6 +9,11 @@
 
 namespace graphics {
 
+const std::map<unsigned int, std::string> Map::IdToTileInfo {
+  {0, "map/plateform.jpg"},
+  {1, "map/sand.jpg"}
+};
+
 Map::Map(const std::string& map_filepath)
 {
   // Read file
@@ -60,11 +65,10 @@ Map::Map(const std::string& map_filepath)
 
       auto& tile      = m_tiles[y][x];
       auto texture_id = std::stoi( parts[0] );
-      auto& texture   = *Textures::get( texture_id );
+      auto& texture   = *Textures::get(IdToTileInfo.at(texture_id));
 
       tile.sprite.setTexture( texture );
-      tile.sprite.setScale(m_tile_size / texture.getSize().x,
-                           m_tile_size / texture.getSize().y);
+      tile.sprite.setScale(m_tile_size / texture.getSize().x, m_tile_size / texture.getSize().y);
       tile.sprite.setPosition(x * m_tile_size, y * m_tile_size);
       tile.blocking = utils::conversions::boolean( parts[1] );
     }

@@ -11,11 +11,11 @@ class Animation final : public sf::Drawable
 
     /*!
      * \brief Animation constructor
-     * \param texture_filepath - texture file
-     * \param sizes            - scale textures to fit this size
-     * \param nbr_sprites      - number of sprites inside the texture
+     * \param texutre     - texture
+     * \param sizes       - scale textures to fit this size
+     * \param nbr_sprites - number of sprites inside the texture
      */
-    Animation(const std::string& texture_filepath, const sf::Vector2f& sizes, unsigned int nbr_sprites);
+    Animation(const sf::Texture& texture, const sf::Vector2f& sizes, unsigned int nbr_sprites);
 
     /*! Start the animation frome the beginning
      *  \param animation_time - animation will complete in given time

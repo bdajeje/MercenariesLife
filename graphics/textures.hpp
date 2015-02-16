@@ -13,10 +13,6 @@ class Textures final
 {
   public:
 
-    static const std::map<unsigned int, std::string> IdToName;
-
-  public:
-
     /*!
      * \brief Resource singleton initializer
      * \param directory_path - where to find resources
@@ -30,9 +26,6 @@ class Textures final
      * \note loads the resource in memory if not already done
      */
     static const sf::Texture* get(const std::string& name);
-
-    /*! Same as get(const std::string& name) but with an ID */
-    static const sf::Texture* get(unsigned int id);
 
   protected:
 

@@ -1,24 +1,13 @@
 #include "animation.hpp"
 
-#include <iostream>
-
-#include "graphics/textures.hpp"
-
 namespace graphics {
 
-Animation::Animation(const std::string& texture_filepath, const sf::Vector2f& sizes, unsigned int nbr_sprites)
+Animation::Animation(const sf::Texture& texture, const sf::Vector2f& sizes, unsigned int nbr_sprites)
   : m_nbr_sprites {nbr_sprites}
 {
-  const sf::Texture* texture = Textures::get(texture_filepath);
-  if(!texture)
-  {
-    std::cerr << "Animation can't load texture: " << texture_filepath << std::endl;
-    return;
-  }
-
-  m_animation_sprite.setTexture(*texture);
-  m_animation_sprite.setScale( (sizes.x * nbr_sprites) / texture->getSize().x,
-                               sizes.y / texture->getSize().y );
+  m_animation_sprite.setTexture(texture);
+  m_animation_sprite.setScale( (sizes.x * nbr_sprites) / texture.getSize().x,
+                               sizes.y / texture.getSize().y );
 
   // Select first sprite by default
   selectSubSprite();

@@ -6,11 +6,6 @@
 
 namespace graphics {
 
-const std::map<unsigned int, std::string> Textures::IdToName {
-  {0, "map/plateform.jpg"},
-  {1, "map/sand.jpg"}
-};
-
 std::unique_ptr<Textures> Textures::s_instance;
 
 void Textures::init(const std::string& directory_path)
@@ -47,11 +42,6 @@ const sf::Texture* Textures::get(const std::string& name)
   // Resource isn't in memory, let's load it
   s_instance->load(name);
   return &s_instance->m_resources[name];
-}
-
-const sf::Texture* Textures::get(unsigned int id)
-{
-  return get( Textures::IdToName.at(id) );
 }
 
 }
