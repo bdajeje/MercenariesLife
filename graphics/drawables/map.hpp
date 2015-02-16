@@ -52,6 +52,9 @@ class Map
     /*! Get tile size */
     float tileSize() const { return m_tile_size; }
 
+    /*! Get map name */
+    const std::string& name() const { return m_map_name; }
+
     /*! Is the view moving to a destination
      * \returns true if the view is actually reaching a destination
      */
@@ -62,7 +65,7 @@ class Map
     /*! Set title of the map
      * \param map_title - to set
      */
-    void setTitle(const std::string& map_title);
+    void setMapName(const std::string& map_title);
 
     /*! Can we move to destination
      * \returns true if we can move to destination
@@ -93,7 +96,7 @@ class Map
     sf::Sprite m_map_sprite;
 
     /*! Map title */
-    std::string m_title;
+    std::string m_map_name;
 
     /*! Map tiles */
     std::vector<std::vector<Tile>> m_tiles;

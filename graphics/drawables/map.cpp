@@ -29,7 +29,7 @@ Map::Map(const std::string& map_name)
   size_t line_offset = 0;
 
   // Start interpreting the lines
-  setTitle(lines.at( line_offset++ ));
+  setMapName(lines.at( line_offset++ ));
 
   // Common container for line parts
   std::vector<std::string> parts;
@@ -70,9 +70,9 @@ sf::Vector2f Map::tileCenterPositionInPixel(const utils::Position& tile_position
   return { tile_position.x * m_tile_size + offset, tile_position.y * m_tile_size + offset };
 }
 
-void Map::setTitle(const std::string& map_title)
+void Map::setMapName(const std::string& map_title)
 {
-  m_title = boost::trim_copy(map_title);
+  m_map_name = boost::trim_copy(map_title);
 }
 
 void Map::draw(sf::RenderTarget& target)

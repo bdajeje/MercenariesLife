@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "graphics/drawables/map.hpp"
+#include "graphics/drawables/user_interface.hpp"
+#include "graphics/fonts.hpp"
 #include "graphics/textures.hpp"
 #include "models/player.hpp"
 #include "utils/direction.hpp"
@@ -60,9 +62,13 @@ int main()
 
   GameConfig::init();
   graphics::Textures::init("resources/images/");
-  graphics::Map map {"1"};
+  graphics::Fonts::init("resources/fonts/");
 
+  // Drawable objects
+  graphics::Map map {"1"};
   models::Player player {"player", {map.tileSize() / 2, map.tileSize() / 2}, {map.tileSize(), map.tileSize()}};
+  graphics::UserInterface ui;
+  ui.setMapName(map.name());
 
   // Main loop
   bool window_focused = true;
@@ -94,7 +100,8 @@ int main()
     // Draw player
     player.draw(window);
 
-    //window.setView(window.getDefaultView());
+    // Draw UI
+    ui.draw(window);
 
     // Render screen
     window.display();

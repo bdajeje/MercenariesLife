@@ -12,7 +12,9 @@ SOURCES += main.cpp \
     graphics/drawables/map_character.cpp \
     utils/resources/game_config.cpp \
     utils/conversions.cpp \
-    graphics/drawables/animation.cpp
+    graphics/drawables/animation.cpp \
+    graphics/drawables/user_interface.cpp \
+    graphics/fonts.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -30,4 +32,6 @@ HEADERS += \
     utils/resources/game_config.hpp \
     utils/conversions.hpp \
     graphics/drawables/animation.hpp \
-    utils/direction.hpp
+    utils/direction.hpp \
+    graphics/drawables/user_interface.hpp \
+    graphics/fonts.hpp
