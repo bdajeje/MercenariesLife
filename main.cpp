@@ -51,7 +51,7 @@ int main()
 {
   // Creating window
   const unsigned int window_width {1000};
-  const unsigned int window_height {800};
+  const unsigned int window_height {1000};
   sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Mercenaries Life");
   window.setFramerateLimit(60);
 
@@ -66,7 +66,7 @@ int main()
 
   // Drawable objects
   graphics::Map map {"1"};
-  models::Player player {"player", {map.tileSize() / 2, map.tileSize() / 2}, {map.tileSize(), map.tileSize()}};
+  models::Player player {"player", {(window_width - map.tileSize()) / 2, (window_height - map.tileSize()) / 2}, {map.tileSize(), map.tileSize()}};
   graphics::UserInterface ui;
   ui.setMapName(map.name());
 
@@ -94,11 +94,9 @@ int main()
     // Clear entire screen
     window.clear();
 
-    // Draw map
-    map.draw(window);
-
-    // Draw player
-    player.draw(window);
+    // Draw map and player
+    // Map is responsible for drawing player because of possible map z-index textures
+    map.draw(window, player, window.getDefaultView());
 
     // Draw UI
     ui.draw(window);

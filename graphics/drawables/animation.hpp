@@ -26,6 +26,11 @@ class Animation final : public sf::Drawable
     /*! Is the application currently playing */
     bool isRunning() const { return m_started; }
 
+    /*! Set position
+     * \param position - to set
+     */
+    void setPosition(const sf::Vector2f& position) { m_animation_sprite.setPosition(position); }
+
   protected:
 
     /*! See parent class */

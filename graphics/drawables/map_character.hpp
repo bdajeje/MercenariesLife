@@ -16,8 +16,9 @@ class MapCharacter
      * \param texture_directory - directory when to find textures and animations
      * \param position          - where to draw the character
      * \param size              - size to scale textures
+     * \param nbr_sprites       - number of sprites in animation
      */
-    MapCharacter(const std::string& texture_directory, const sf::Vector2f& position, const sf::Vector2f size);
+    MapCharacter(const std::string& texture_directory, const sf::Vector2f& position, const sf::Vector2f& size, unsigned int nbr_sprites);
 
     /*! Draw the character
      * \param target - where to draw
@@ -38,9 +39,6 @@ class MapCharacter
     bool isMoving() const { return m_current_animation->isRunning(); }
 
   protected:
-
-    /*! View for this character */
-    sf::View m_view;
 
     /*! Character animation when moving top */
     Animation m_move_top_animation;

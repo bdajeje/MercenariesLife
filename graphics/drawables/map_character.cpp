@@ -7,19 +7,21 @@
 
 namespace graphics {
 
-MapCharacter::MapCharacter(const std::string& texture_directory, const sf::Vector2f& position, const sf::Vector2f size)
-  : m_move_top_animation { *Textures::get("characters/" + texture_directory + "/move_top.png"), size, 4 }
-  , m_move_down_animation { *Textures::get("characters/" + texture_directory + "/move_bottom.png"), size, 4 }
-  , m_move_left_animation { *Textures::get("characters/" + texture_directory + "/move_left.png"), size, 4 }
-  , m_move_right_animation { *Textures::get("characters/" + texture_directory + "/move_right.png"), size, 4 }
+MapCharacter::MapCharacter(const std::string& texture_directory, const sf::Vector2f& position, const sf::Vector2f& size, unsigned int nbr_sprites)
+  : m_move_top_animation { *Textures::get("characters/" + texture_directory + "/move_top.png"), size, nbr_sprites }
+  , m_move_down_animation { *Textures::get("characters/" + texture_directory + "/move_bottom.png"), size, nbr_sprites }
+  , m_move_left_animation { *Textures::get("characters/" + texture_directory + "/move_left.png"), size, nbr_sprites }
+  , m_move_right_animation { *Textures::get("characters/" + texture_directory + "/move_right.png"), size, nbr_sprites }
   , m_current_animation { &m_move_down_animation }
 {
-  m_view.setCenter( position );
+  m_move_top_animation.setPosition(position);
+  m_move_down_animation.setPosition(position);
+  m_move_left_animation.setPosition(position);
+  m_move_right_animation.setPosition(position);
 }
 
 void MapCharacter::draw(sf::RenderTarget& target)
 {
-  target.setView(m_view);
   target.draw(*m_current_animation);
 }
 

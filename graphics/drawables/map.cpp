@@ -62,12 +62,58 @@ Map::Map(const std::string& map_name)
     for( size_t x = 0; x < width; ++x )
       m_tiles[y][x].blocking = utils::conversions::boolean( lines.at((line_offset++)) );
   }
+
+  // Load PNJs
+  loadPNJs(map_filepath + ".pnj");
+}
+
+void Map::loadPNJs(const std::string& pnjs_filepath)
+{
+  // Read file
+  std::string pnjs_file_content;
+  if( !utils::files::read(pnjs_filepath, pnjs_file_content) )
+  {
+    std::cerr << "Can't read PNJs map file: " << pnjs_filepath << std::endl;
+    throw;
+  }
+
+  // Split line by line
+  std::vector<std::string> lines;
+  boost::algorithm::split(lines, pnjs_file_content, boost::is_any_of("\n"));
+
+  // Add PNJs
+  const sf::Vector2f size {m_tile_size, m_tile_size};
+  std::vector<std::string> parts;
+  int x, y;
+  for( const auto& line : lines )
+  {
+    // Get parts from line
+    boost::algorithm::split(parts, line, boost::is_any_of(" "));
+
+    // Ignore incorrect lines
+    if(parts.size() != 3)
+      continue;
+
+    x = std::stoi(parts[0]);
+    y = std::stoi(parts[1]);
+
+    // Create PNJ and add it to a tile
+    auto pnj = std::make_shared<models::PNJ>(parts[2], tileCornerPositionInPixel({x, y}), size);
+    m_pnjs.push_back(pnj);
+    m_tiles[y][x].pnj = pnj;
+  }
 }
 
 sf::Vector2f Map::tileCenterPositionInPixel(const utils::Position& tile_position) const
 {
   static const float offset = m_tile_size / 2.f;
-  return { tile_position.x * m_tile_size + offset, tile_position.y * m_tile_size + offset };
+  const auto corner_position = tileCornerPositionInPixel(tile_position);
+  return { corner_position.x + offset, corner_position.y + offset };
+}
+
+sf::Vector2f Map::tileCornerPositionInPixel(const utils::Position& tile_position) const
+{
+  return { tile_position.x * m_tile_size, tile_position.y * m_tile_size };
 }
 
 void Map::setMapName(const std::string& map_title)
@@ -75,12 +121,23 @@ void Map::setMapName(const std::string& map_title)
   m_map_name = boost::trim_copy(map_title);
 }
 
-void Map::draw(sf::RenderTarget& target)
+void Map::draw(sf::RenderTarget& target, models::Player& player, const sf::View& player_view)
 {
   target.setView(m_view);
+
+  // Draw map texture
   target.draw(m_map_sprite);
 
+  // Draw PNJs
+  for( auto& pnj : m_pnjs )
+    pnj->draw(target);
+
+  // Move the view if needed
   smoothViewMoveToDestination();
+
+  // Draw player
+  target.setView(player_view);
+  player.draw(target);
 }
 
 bool Map::move(int x, int y)
@@ -105,11 +162,17 @@ bool Map::move(int x, int y)
 
 bool Map::canMoveTo(int x, int y) const
 {
+  // Out of Y bounds
   if( y < 0 || (size_t)y >= m_tiles.size() )
     return false;
 
+  // Out of X bounds
   const auto& row_of_tiles = m_tiles.at(y);
   if( x < 0 || (size_t)x >= row_of_tiles.size() )
+    return false;
+
+  // PNJ on this tile (can't move onto a PNJ)
+  if( m_tiles[y][x].pnj )
     return false;
 
   return !row_of_tiles.at(x).blocking;

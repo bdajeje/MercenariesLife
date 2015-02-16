@@ -7,6 +7,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "models/pnj.hpp"
+#include "models/player.hpp"
 #include "utils/position.hpp"
 
 namespace graphics {
@@ -16,9 +18,12 @@ struct Tile
 {
   /*! Can we move onto this tile */
   bool blocking {false};
+
+  /*! Possible PNJ on this tile */
+  std::shared_ptr<models::PNJ> pnj;
 };
 
-class Map
+class Map final
 {
   public:
 
@@ -32,10 +37,7 @@ class Map
     /*! Draw the map
      * \param target - where to draw
      */
-    void draw(sf::RenderTarget& target);
-
-    /*! Get map view */
-    const sf::View& view() const { return m_view; }
+    void draw(sf::RenderTarget& target, models::Player& player, const sf::View& player_view);
 
     /*! Move the view of the map
      * \param x - movement on the X axe
@@ -60,7 +62,7 @@ class Map
      */
     bool isMoving() const;
 
-  protected:
+  private:
 
     /*! Set title of the map
      * \param map_title - to set
@@ -83,6 +85,18 @@ class Map
      * \return position in pixel
      */
     sf::Vector2f tileCenterPositionInPixel(const utils::Position& tile_position) const;
+
+    /*!
+     * \brief Get top left corner position in pixel of a tile from a tile position
+     * \param tile_position - to find pixel position from
+     * \return position in pixel
+     */
+    sf::Vector2f tileCornerPositionInPixel(const utils::Position& tile_position) const;
+
+    /*! Load PNJs
+     *  \param pnjs_filepath - filepath to PNJs file
+     */
+    void loadPNJs(const std::string& pnjs_filepath);
 
   private:
 
@@ -109,6 +123,9 @@ class Map
 
     /*! Clock dedicated to view movement limits */
     sf::Clock m_movement_clock;
+
+    /*! PNJs of this map */
+    std::vector<std::shared_ptr<models::PNJ>> m_pnjs;
 };
 
 }

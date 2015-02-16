@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     utils/conversions.cpp \
     graphics/drawables/animation.cpp \
     graphics/drawables/user_interface.cpp \
-    graphics/fonts.cpp
+    graphics/fonts.cpp \
+    models/pnj.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -34,4 +35,5 @@ HEADERS += \
     graphics/drawables/animation.hpp \
     utils/direction.hpp \
     graphics/drawables/user_interface.hpp \
-    graphics/fonts.hpp
+    graphics/fonts.hpp \
+    models/pnj.hpp
