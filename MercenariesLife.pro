@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     graphics/fonts.cpp \
     models/pnj.cpp \
     events/events.cpp \
-    models/conversation.cpp
+    models/conversation.cpp \
+    events/keyboard_listener.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -40,4 +41,5 @@ HEADERS += \
     graphics/fonts.hpp \
     models/pnj.hpp \
     events/events.hpp \
-    models/conversation.hpp
+    models/conversation.hpp \
+    events/keyboard_listener.hpp

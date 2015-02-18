@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "events/keyboard_listener.hpp"
 #include "models/pnj.hpp"
 #include "models/player.hpp"
 #include "utils/position.hpp"
@@ -23,7 +24,7 @@ struct Tile
   std::shared_ptr<models::PNJ> pnj;
 };
 
-class Map final
+class Map final : public events::KeyboardListener
 {
   public:
 
@@ -37,7 +38,7 @@ class Map final
     /*! Draw the map
      * \param target - where to draw
      */
-    void draw(sf::RenderTarget& target, models::Player& player, const sf::View& player_view);
+    void draw(sf::RenderTarget& target, const sf::View& player_view);
 
     /*! Move the view of the map
      * \param x - movement on the X axe
@@ -51,16 +52,8 @@ class Map final
      */
     void playerInteraction(utils::Direction direction);
 
-    /*! Set map focused
-     * \param focused - value to set
-     * \note an unfocused map will ignore events like move
-     */
-    void setFocused(bool focused) { m_focused = focused; }
-
-    /*! Get time taken in milliseconds to move from a tile to another
-     *  \return time taken in milliseconds to move from a tile to another
-     */
-    unsigned int timeTakenToMove() const;
+    /*! Set a player object to interact to with the map */
+    void setPlayer(std::shared_ptr<models::Player>& player) { m_player = player; }
 
     /*! Get tile size */
     float tileSize() const { return m_tile_size; }
@@ -79,8 +72,9 @@ class Map final
      */
     bool isMoving() const;
 
-    /*! Is the map currently focused */
-    bool isFocused() const { return m_focused; }
+    /*! Implementations for KeyboardListener */
+    virtual void keyPress(sf::Keyboard::Key key_code);
+    virtual void keyboardAction();
 
   private:
 
@@ -121,10 +115,12 @@ class Map final
      */
     void loadPNJs(const std::string& pnjs_filepath);
 
-  private:
+    /*! Get time taken in milliseconds to move from a tile to another
+     *  \return time taken in milliseconds to move from a tile to another
+     */
+    unsigned int timeTakenToMove() const;
 
-    /*! Is the map focused */
-    bool m_focused {true};
+  private:
 
     /*! Width/Height of a tile */
     const float m_tile_size {75};
@@ -152,6 +148,9 @@ class Map final
 
     /*! PNJs of this map */
     std::vector<std::shared_ptr<models::PNJ>> m_pnjs;
+
+    /*! Player object */
+    std::shared_ptr<models::Player> m_player;
 };
 
 }

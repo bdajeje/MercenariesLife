@@ -3,12 +3,13 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "events/keyboard_listener.hpp"
 #include "models/conversation.hpp"
 #include "models/pnj.hpp"
 
 namespace graphics {
 
-class UserInterface
+class UserInterface : public events::KeyboardListener
 {
   public:
 
@@ -27,6 +28,13 @@ class UserInterface
      * \return true with the conversation is started, false otherwise (invalid PNJ for example)
      */
     bool startConversation(std::shared_ptr<models::PNJ> pnj);
+
+    /*! Ends current conversation */
+    void endConversation();
+
+    /*! Implementations for KeyboardListener */
+    virtual void keyPress(sf::Keyboard::Key key_code);
+    virtual void keyboardAction();
 
   private:
 

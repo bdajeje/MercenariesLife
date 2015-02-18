@@ -22,6 +22,12 @@ GameConfig::GameConfig()
 
   // Map interaction
   m_key_bingings[KeyboardActions::MapPlayerInteraction] = sf::Keyboard::Space;
+
+  // Conversations
+  m_key_bingings[KeyboardActions::ShowAllConversation] = sf::Keyboard::Space;
+  m_key_bingings[KeyboardActions::ConversationChoiceUp] = sf::Keyboard::Up;
+  m_key_bingings[KeyboardActions::ConversationChoiceDown] = sf::Keyboard::Down;
+  m_key_bingings[KeyboardActions::ConversationSelectChoice] = sf::Keyboard::Return;
 }
 
 }

@@ -13,58 +13,11 @@
 
 using namespace utils;
 
-// \todo Right now this variable is global, only because the class to handle all the following code is not yet wrapped into a class
-bool window_focused = true;
-
-void mapMovement(graphics::Map& map, models::Player& player)
-{
-  if( !window_focused || !map.isFocused() || map.isMoving() )
-    return;
-
-  if(sf::Keyboard::isKeyPressed( GameConfig::keyboardKey( KeyboardActions::MapMoveUp ) ))
-  {
-    player.setDirection(utils::Direction::Up);
-
-    if(map.move(0, -1))
-      player.move( map.timeTakenToMove() );
-  }
-  else if(sf::Keyboard::isKeyPressed( GameConfig::keyboardKey( KeyboardActions::MapMoveDown ) ))
-  {
-    player.setDirection(utils::Direction::Down);
-
-    if( map.move(0, 1) )
-      player.move( map.timeTakenToMove() );
-  }
-  else if(sf::Keyboard::isKeyPressed( GameConfig::keyboardKey( KeyboardActions::MapMoveLeft ) ))
-  {
-    player.setDirection(utils::Direction::Left);
-
-    if( map.move(-1, 0) )
-      player.move( map.timeTakenToMove() );
-  }
-  else if(sf::Keyboard::isKeyPressed( GameConfig::keyboardKey( KeyboardActions::MapMoveRight ) ))
-  {
-    player.setDirection(utils::Direction::Right);
-
-    if( map.move(1, 0) )
-      player.move( map.timeTakenToMove() );
-  }
-}
-
-void mapPlayerInteraction(sf::Keyboard::Key key_code, const models::Player& player, graphics::Map& map)
-{
-  if( !window_focused )
-    return;
-
-  if(key_code == GameConfig::keyboardKey( KeyboardActions::MapPlayerInteraction ))
-    map.playerInteraction( player.direction() );
-}
-
 int main()
 {
   // Creating window
-  const unsigned int window_width {1000};
-  const unsigned int window_height {1000};
+  const unsigned int window_width = GameConfig::windowWidth();
+  const unsigned int window_height = GameConfig::windowHeight();
   sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Mercenaries Life");
   window.setFramerateLimit(60);
 
@@ -80,17 +33,26 @@ int main()
 
   // Drawable objects
   graphics::Map map {"1"};
-  models::Player player {"player", {(window_width - map.tileSize()) / 2, (window_height - map.tileSize()) / 2}, {map.tileSize(), map.tileSize()}};
+  auto player = std::make_shared<models::Player>("player", sf::Vector2f{(window_width - map.tileSize()) / 2, (window_height - map.tileSize()) / 2},
+                                                           sf::Vector2f{map.tileSize(), map.tileSize()});
+  map.setPlayer(player);
   graphics::UserInterface ui;
   ui.setMapName(map.name());
 
+  // Currently focused object
+  events::KeyboardListener* focused_object = &map;
+
   // Main loop
+  bool window_focused = true;
   while(window.isOpen())
   {
     // User events management
     sf::Event event;
     while(window.pollEvent(event))
     {
+      if(!window_focused)
+        continue;
+
       switch(event.type)
       {
         case sf::Event::Closed: window.close(); break;
@@ -99,7 +61,7 @@ int main()
         case sf::Event::KeyPressed:
         {
           // Player interact with the map
-          mapPlayerInteraction(event.key.code, player, map);
+          focused_object->keyPress(event.key.code);
           break;
         }
         default: break;
@@ -113,22 +75,28 @@ int main()
       switch(game_event)
       {
         case events::Type::TalkToPNJ:
-          if( ui.startConversation( map.getPNJ(player.direction()) ))
-            map.setFocused(false);
+          if( ui.startConversation( map.getPNJ(player->direction()) ))
+            focused_object = &ui;
           break;
+        case events::Type::EndTalkToPNJ:
+        {
+          ui.endConversation();
+          focused_object = &map;
+          break;
+        }
         default: break;
       }
     }
 
-    // Map movement
-    mapMovement(map, player);
+    // Handle user key still pressed
+    focused_object->keyboardAction();
 
     // Clear entire screen
     window.clear();
 
     // Draw map and player
     // Map is responsible for drawing player because of possible map z-index textures
-    map.draw(window, player, window.getDefaultView());
+    map.draw(window, window.getDefaultView());
 
     // Draw UI
     ui.draw(window);

@@ -11,7 +11,8 @@ namespace utils {
 /*! Every possible keyboard actions */
 enum class KeyboardActions
 {
-  MapMoveUp, MapMoveDown, MapMoveLeft, MapMoveRight, MapPlayerInteraction
+  MapMoveUp, MapMoveDown, MapMoveLeft, MapMoveRight, MapPlayerInteraction,
+  ShowAllConversation, ConversationChoiceUp, ConversationChoiceDown, ConversationSelectChoice
 };
 
 class GameConfig final
@@ -30,6 +31,15 @@ class GameConfig final
     /*! Get map movement speed */
     static float mapMovementTilesPerSecond() { return s_instance->m_map_movement_speed; }
 
+    /*! Get display conversation character speed
+     *  \return number of characters to display per second
+     */
+    static float conversationCharactersPerSecond() { return s_instance->m_conversation_characters_speed; }
+
+    /*! Window sizes */
+    static unsigned int windowWidth() { return 1000; }
+    static unsigned int windowHeight() { return 1000; }
+
   private:
 
     GameConfig();
@@ -41,6 +51,9 @@ class GameConfig final
 
     /*! Speed of map movement in tiles per second */
     float m_map_movement_speed {3};
+
+    /*! Number of character to display in a conversation per second */
+    float m_conversation_characters_speed {50};
 
     /*! Keyboard actions mapped to keys */
     std::map<KeyboardActions, sf::Keyboard::Key> m_key_bingings;

@@ -12,6 +12,8 @@ class PNJ : public Character,
   public:
 
     PNJ(const std::string& filename, const sf::Vector2f& position, const sf::Vector2f size);
+
+    const sf::Texture& getPortrait() const;
 };
 
 }

@@ -13,6 +13,10 @@ class Fonts final
 {
   public:
 
+    enum class Type {
+      UI, Conversation
+    };
+
     /*!
      * \brief Resource singleton initializer
      * \param directory_path - where to find resources
@@ -26,6 +30,7 @@ class Fonts final
      * \note loads the resource in memory if not already done
      */
     static const sf::Font* get(const std::string& name);
+    static const sf::Font* get(Type type);
 
   protected:
 
@@ -48,6 +53,9 @@ class Fonts final
 
     /*! Singleton */
     static std::unique_ptr<Fonts> s_instance;
+
+    /*! Map font type to font name */
+    const static std::map<Type, std::string> s_type_to_font;
 };
 
 }

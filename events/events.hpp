@@ -7,7 +7,9 @@
 namespace events {
 
 enum class Type {
-  None, TalkToPNJ
+  None,
+  /*! NPJ interactions */
+  TalkToPNJ, EndTalkToPNJ
 };
 
 class Events final

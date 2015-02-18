@@ -7,6 +7,10 @@
 namespace graphics {
 
 std::unique_ptr<Fonts> Fonts::s_instance;
+const std::map<Fonts::Type, std::string> Fonts::s_type_to_font = {
+  {Fonts::Type::UI, "Ubuntu-B.ttf"},
+  {Fonts::Type::Conversation, "Ubuntu-B.ttf"}
+};
 
 void Fonts::init(const std::string& directory_path)
 {
@@ -42,6 +46,11 @@ const sf::Font* Fonts::get(const std::string& name)
   // Resource isn't in memory, let's load it
   s_instance->load(name);
   return &s_instance->m_resources[name];
+}
+
+const sf::Font* Fonts::get(Type type)
+{
+  return get( s_type_to_font.at(type) );
 }
 
 }

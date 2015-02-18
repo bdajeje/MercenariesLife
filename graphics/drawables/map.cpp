@@ -122,7 +122,7 @@ void Map::setMapName(const std::string& map_title)
   m_map_name = boost::trim_copy(map_title);
 }
 
-void Map::draw(sf::RenderTarget& target, models::Player& player, const sf::View& player_view)
+void Map::draw(sf::RenderTarget& target, const sf::View& player_view)
 {
   target.setView(m_view);
 
@@ -138,13 +138,13 @@ void Map::draw(sf::RenderTarget& target, models::Player& player, const sf::View&
 
   // Draw player
   target.setView(player_view);
-  player.draw(target);
+  m_player->draw(target);
 }
 
 bool Map::move(int x, int y)
 {
   // Check last move call wasn't too close in time
-  if( !isFocused() || isMoving() )
+  if( isMoving() )
     return false;
 
   // Check destination is reachabled
@@ -257,6 +257,47 @@ std::shared_ptr<models::PNJ> Map::getPNJ(utils::Direction direction) const
     return nullptr;
 
   return m_tiles[y][x].pnj;
+}
+
+void Map::keyPress(sf::Keyboard::Key key_code)
+{
+  if(key_code == utils::GameConfig::keyboardKey( utils::KeyboardActions::MapPlayerInteraction ))
+    playerInteraction( m_player->direction() );
+}
+
+void Map::keyboardAction()
+{
+  if( isMoving() )
+    return;
+
+  if(sf::Keyboard::isKeyPressed( utils::GameConfig::keyboardKey( utils::KeyboardActions::MapMoveUp ) ))
+  {
+    m_player->setDirection(utils::Direction::Up);
+
+    if(move(0, -1))
+      m_player->move( timeTakenToMove() );
+  }
+  else if(sf::Keyboard::isKeyPressed( utils::GameConfig::keyboardKey( utils::KeyboardActions::MapMoveDown ) ))
+  {
+    m_player->setDirection(utils::Direction::Down);
+
+    if( move(0, 1) )
+      m_player->move( timeTakenToMove() );
+  }
+  else if(sf::Keyboard::isKeyPressed( utils::GameConfig::keyboardKey( utils::KeyboardActions::MapMoveLeft ) ))
+  {
+    m_player->setDirection(utils::Direction::Left);
+
+    if( move(-1, 0) )
+      m_player->move( timeTakenToMove() );
+  }
+  else if(sf::Keyboard::isKeyPressed( utils::GameConfig::keyboardKey( utils::KeyboardActions::MapMoveRight ) ))
+  {
+    m_player->setDirection(utils::Direction::Right);
+
+    if( move(1, 0) )
+      m_player->move( timeTakenToMove() );
+  }
 }
 
 }
