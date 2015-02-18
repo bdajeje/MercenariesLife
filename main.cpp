@@ -43,21 +43,15 @@ int main()
   events::KeyboardListener* focused_object = &map;
 
   // Main loop
-  bool window_focused = true;
   while(window.isOpen())
   {
     // User events management
     sf::Event event;
     while(window.pollEvent(event))
     {
-      if(!window_focused)
-        continue;
-
       switch(event.type)
       {
         case sf::Event::Closed: window.close(); break;
-        case sf::Event::LostFocus: window_focused = false; break;
-        case sf::Event::GainedFocus: window_focused = true; break;
         case sf::Event::KeyPressed:
         {
           // Player interact with the map
