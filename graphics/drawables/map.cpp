@@ -6,6 +6,7 @@
 #include "graphics/textures.hpp"
 #include "utils/conversions.hpp"
 #include "utils/files/file.hpp"
+#include "utils/rapidjson/document.h"
 #include "utils/resources/game_config.hpp"
 
 namespace graphics {
@@ -22,31 +23,20 @@ Map::Map(const std::string& map_name)
     throw;
   }
 
-  // Split line by line
-  std::vector<std::string> lines;
-  boost::algorithm::split(lines, map_file_content, boost::is_any_of("\n"));
+  // Read json document
+  rapidjson::Document document;
+  document.Parse<0>(map_file_content.c_str());
+  const auto& map = document["map"];
 
-  // Currently read line
-  size_t line_offset = 0;
-
-  // Start interpreting the lines
-  setMapName(lines.at( line_offset++ ));
-
-  // Common container for line parts
-  std::vector<std::string> parts;
-
-  // Read starting positions
-  boost::algorithm::split(parts, lines.at(line_offset++), boost::is_any_of(" "));
-  m_tile_position.x = std::stoi( parts[0] );
-  m_tile_position.y = std::stoi( parts[1] );
+  // Read map info
+  setMapName(map["name"].GetString());
+  m_tile_position.x = map["start_pos"]["x"].GetInt();
+  m_tile_position.y = map["start_pos"]["y"].GetInt();
+  size_t width  = map["size"]["w"].GetInt();
+  size_t height = map["size"]["h"].GetInt();
 
   // Init view
   m_view.setCenter(tileCenterPositionInPixel(m_tile_position));
-
-  // Read sizes of the map
-  boost::algorithm::split(parts, lines.at(line_offset++), boost::is_any_of(" "));
-  size_t width  = std::stoi(parts.at(0));
-  size_t height = std::stoi(parts.at(1));
 
   // Create the map texture and sprite
   m_map_texture.loadFromFile(map_filepath + ".png");
@@ -58,14 +48,35 @@ Map::Map(const std::string& map_name)
     row.resize(width);
 
   // Add tiles
+  const auto& titles = map["tiles"];
   for( size_t y = 0; y < height; ++y )
   {
     for( size_t x = 0; x < width; ++x )
-      m_tiles[y][x].blocking = utils::conversions::boolean( lines.at((line_offset++)) );
+    {
+      const auto& tile = titles[y*width + x];
+
+      // Is blocking
+      getTile(x, y).blocking = tile["blocking"].GetBool();
+
+      // Read events
+      const auto& events = tile["events"];
+      for(rapidjson::SizeType offset = 0; offset < events.Size(); ++offset)
+      {
+         std::string type = events[offset]["type"].GetString();
+         getTile(x, y).addEvent(events::Type::PlayerEnter,
+                                std::bind(&Map::toMap, 2) );
+      }
+    }
   }
 
   // Load PNJs
   loadPNJs(map_filepath + ".pnj");
+}
+
+// TEMPORARY
+void Map::toMap(int map_number)
+{
+  std::cout << "to map " << map_number << std::endl;
 }
 
 void Map::loadPNJs(const std::string& pnjs_filepath)
@@ -101,7 +112,7 @@ void Map::loadPNJs(const std::string& pnjs_filepath)
     // Create PNJ and add it to a tile
     auto pnj = std::make_shared<models::PNJ>(parts[2], tileCornerPositionInPixel({x, y}), size);
     m_pnjs.push_back(pnj);
-    m_tiles[y][x].pnj = pnj;
+    getTile(x, y).pnj = pnj;
   }
 }
 
@@ -181,7 +192,7 @@ bool Map::canMoveTo(int x, int y) const
     return false;
 
   // PNJ on this tile (can't move onto a PNJ)
-  const Tile& tile = m_tiles[y][x];
+  const Tile& tile = getTile(x, y);
   if( tile.pnj )
     return false;
 
@@ -223,6 +234,16 @@ void Map::smoothViewMoveToDestination()
     m_view.setCenter( view_movement_destination );
   else
     m_view.move( x_move, y_move );
+
+  // Did we reach the destination?
+  if( !isMoving() )
+    moveDestinationReached();
+}
+
+void Map::moveDestinationReached()
+{
+  // Player reached destination, trigger destination possible events
+  getTile(m_tile_position.x, m_tile_position.y).activate(events::Type::PlayerEnter);
 }
 
 unsigned int Map::timeTakenToMove() const
@@ -256,7 +277,7 @@ std::shared_ptr<models::PNJ> Map::getPNJ(utils::Direction direction) const
   if( !isValidPosition(x, y) )
     return nullptr;
 
-  return m_tiles[y][x].pnj;
+  return getTile(x, y).pnj;
 }
 
 void Map::keyPress(sf::Keyboard::Key key_code)

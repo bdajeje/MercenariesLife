@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "events/keyboard_listener.hpp"
+#include "models/interactible.hpp"
 #include "models/pnj.hpp"
 #include "models/player.hpp"
 #include "utils/position.hpp"
@@ -15,13 +16,15 @@
 namespace graphics {
 
 /*! Holds tile information */
-struct Tile
+class Tile : public models::Interactible
 {
-  /*! Can we move onto this tile */
-  bool blocking {false};
+  public:
 
-  /*! Possible PNJ on this tile */
-  std::shared_ptr<models::PNJ> pnj;
+    /*! Can we move onto this tile */
+    bool blocking {false};
+
+    /*! Possible PNJ on this tile */
+    std::shared_ptr<models::PNJ> pnj;
 };
 
 class Map final : public events::KeyboardListener
@@ -76,6 +79,9 @@ class Map final : public events::KeyboardListener
     virtual void keyPress(sf::Keyboard::Key key_code);
     virtual void keyboardAction();
 
+    // TMP
+    static void toMap(int map_sumber);
+
   private:
 
     /*! Set title of the map
@@ -119,6 +125,13 @@ class Map final : public events::KeyboardListener
      *  \return time taken in milliseconds to move from a tile to another
      */
     unsigned int timeTakenToMove() const;
+
+    /*! Get a tile by its coordinates */
+    Tile& getTile(size_t x, size_t y) { return m_tiles[y][x]; }
+    const Tile& getTile(size_t x, size_t y) const { return m_tiles[y][x]; }
+
+    /*! Call this method when the move destination is reached */
+    void moveDestinationReached();
 
   private:
 

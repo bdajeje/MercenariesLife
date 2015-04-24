@@ -8,8 +8,12 @@ namespace events {
 
 enum class Type {
   None,
+
   /*! NPJ interactions */
-  TalkToPNJ, EndTalkToPNJ
+  TalkToPNJ, EndTalkToPNJ,
+
+  /*! Map interactions */
+  PlayerEnter, PlayerLeave
 };
 
 class Events final
