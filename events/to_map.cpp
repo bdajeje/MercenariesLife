@@ -13,6 +13,7 @@ ToMap::ToMap( std::string map_name )
 bool ToMap::exec()
 {
   std::cout << "to map " << _map_name << std::endl;
+  Game::instance()->newMap(_map_name);
 
   return true;
 }

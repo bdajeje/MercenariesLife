@@ -14,7 +14,7 @@ bool TalkToPNJ::exec()
     return false;
 
   if( Game::instance()->_ui.startConversation( _pnj ))
-    Game::instance()->_focused_object = &Game::instance()->_ui;
+    Game::instance()->setFocused( Game::Part::UI );
 
   return true;
 }

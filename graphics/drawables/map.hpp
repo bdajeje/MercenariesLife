@@ -58,8 +58,11 @@ class Map final : public events::KeyboardListener
     /*! Set a player object to interact to with the map */
     void setPlayer(std::shared_ptr<models::Player>& player) { m_player = player; }
 
+    /*! Set view position */
+    void setPosition(int x, int y);
+
     /*! Get tile size */
-    float tileSize() const { return m_tile_size; }
+    static constexpr float tileSize() { return m_tile_size; }
 
     /*! Get map name */
     const std::string& name() const { return m_map_name; }
@@ -138,7 +141,7 @@ class Map final : public events::KeyboardListener
   private:
 
     /*! Width/Height of a tile */
-    const float m_tile_size {75};
+    static constexpr float m_tile_size {75};
 
     /*! Map texture */
     sf::Texture m_map_texture;

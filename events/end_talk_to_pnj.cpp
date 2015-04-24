@@ -7,7 +7,7 @@ namespace events {
 bool EndTalkToPNJ::exec()
 {
   Game::instance()->_ui.endConversation();
-  Game::instance()->_focused_object = &Game::instance()->_map;
+  Game::instance()->setFocused(Game::Part::Map);
 
   return true;
 }

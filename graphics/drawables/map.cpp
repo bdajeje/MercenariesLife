@@ -32,13 +32,8 @@ Map::Map(const std::string& map_name)
 
   // Read map info
   setMapName(map["name"].GetString());
-  m_tile_position.x = map["start_pos"]["x"].GetInt();
-  m_tile_position.y = map["start_pos"]["y"].GetInt();
   size_t width  = map["size"]["w"].GetInt();
   size_t height = map["size"]["h"].GetInt();
-
-  // Init view
-  m_view.setCenter(tileCenterPositionInPixel(m_tile_position));
 
   // Create the map texture and sprite
   m_map_texture.loadFromFile(map_filepath + ".png");
@@ -73,8 +68,21 @@ Map::Map(const std::string& map_name)
     }
   }
 
+  // Init view
+  setPosition(map["start_pos"]["x"].GetInt(), map["start_pos"]["y"].GetInt());
+  m_view.setCenter(tileCenterPositionInPixel(m_tile_position));
+
   // Load PNJs
   loadPNJs(map_filepath + ".pnj");
+}
+
+void Map::setPosition(int x, int y)
+{
+  if(!isValidPosition(x, y))
+    return;
+
+  m_tile_position.x = x;
+  m_tile_position.y = y;
 }
 
 void Map::loadPNJs(const std::string& pnjs_filepath)
@@ -166,8 +174,7 @@ bool Map::move(int x, int y)
   getCurrentTile().activate(events::Type::PlayerLeave);
 
   // Set new position
-  m_tile_position.x = new_pos_x;
-  m_tile_position.y = new_pos_y;
+  setPosition(new_pos_x, new_pos_y);
   m_movement_clock.restart();
 
   // Go to new tile event

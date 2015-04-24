@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#include <iostream>
+
 #include "events/events.hpp"
 #include "graphics/fonts.hpp"
 #include "graphics/textures.hpp"
@@ -26,7 +28,6 @@ void Game::init(const std::string& map_name, const std::string& player_name)
 Game::Game(unsigned int window_width, unsigned int window_height,
            const std::string& map_name, const std::string& player_name)
   : _window {sf::VideoMode(window_width, window_height), "Mercenaries Life"}
-  , _map{map_name}
 {
   // Creating window
   _window.setFramerateLimit(60);
@@ -37,13 +38,12 @@ Game::Game(unsigned int window_width, unsigned int window_height,
   _window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
   // Drawable objects
-  _player = std::make_shared<models::Player>(player_name, sf::Vector2f{(window_width - _map.tileSize()) / 2, (window_height - _map.tileSize()) / 2},
-                                                          sf::Vector2f{_map.tileSize(), _map.tileSize()});
-  _map.setPlayer(_player);
-  _ui.setMapName(_map.name());
+  _player = std::make_shared<models::Player>(player_name, sf::Vector2f{(window_width - graphics::Map::tileSize()) / 2, (window_height - graphics::Map::tileSize()) / 2},
+                                                          sf::Vector2f{graphics::Map::tileSize(), graphics::Map::tileSize()});
+  newMap(map_name);
 
   // Currently focused object
-  _focused_object = &_map;
+  _focused_object = _map.get();
 }
 
 void Game::run()
@@ -83,12 +83,34 @@ void Game::run()
 
     // Draw map and player
     // Map is responsible for drawing player because of possible map z-index textures
-    _map.draw(_window, _window.getDefaultView());
+    _map->draw(_window, _window.getDefaultView());
 
     // Draw UI
     _ui.draw(_window);
 
     // Render screen
     _window.display();
+  }
+}
+
+void Game::newMap(const std::string& map_name)
+{
+  // Is the current map focused
+  const bool focused = _focused_object == _map.get();
+
+  _map.reset( new graphics::Map(map_name) );
+  _map->setPlayer(_player);
+  _ui.setMapName(_map->name());
+
+  if(focused)
+    setFocused(Part::Map);
+}
+
+void Game::setFocused( Part part )
+{
+  switch(part)
+  {
+    case Part::Map: _focused_object = _map.get(); break;
+    case Part::UI: _focused_object = &_ui; break;
   }
 }
