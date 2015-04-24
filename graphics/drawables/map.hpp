@@ -130,6 +130,8 @@ class Map final : public events::KeyboardListener
     Tile& getTile(size_t x, size_t y) { return m_tiles[y][x]; }
     const Tile& getTile(size_t x, size_t y) const { return m_tiles[y][x]; }
 
+    Tile& getCurrentTile() { return m_tiles[m_tile_position.y][m_tile_position.x]; }
+
     /*! Call this method when the move destination is reached */
     void moveDestinationReached();
 

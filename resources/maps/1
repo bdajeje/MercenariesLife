@@ -25,8 +25,9 @@
         "blocking": false,
         "events": [
           {
+            "trigger": "PlayerHere",
             "type": "toMap",
-            "values": [2]
+            "values": ["2"]
           }
         ]
       },{
@@ -46,28 +47,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -76,28 +117,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -106,28 +187,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -136,28 +257,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -166,28 +327,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -196,28 +397,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -226,28 +467,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []
@@ -256,28 +537,68 @@
         "events": []
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": false,
-        "events": []
+        "events": [
+          {
+            "type": "walking_sound", "trigger": "PlayerTo",
+            "values": ["sand.mini"]
+          }
+        ]
       },{
         "blocking": true,
         "events": []

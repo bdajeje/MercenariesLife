@@ -13,7 +13,24 @@ enum class Type {
   TalkToPNJ, EndTalkToPNJ,
 
   /*! Map interactions */
-  PlayerEnter, PlayerLeave
+  PlayerHere, // Player is fully here (end of the move)
+  PlayerTo,   // Player comes to
+  PlayerLeave // Player starts leaving
+};
+
+class Event
+{
+  public:
+
+    //Event(Type trigger);
+    Event() = default;
+
+    virtual ~Event() = default;
+
+    /*! Call this method to exec the event
+     *  \returns true if the event has been executed succesfully
+     */
+    virtual bool exec() = 0;
 };
 
 class Events final
@@ -23,11 +40,15 @@ class Events final
     /*! Init singleton */
     static void init();
 
-    /*! Poll first event */
-    static bool pollEvent(Type& type);
+    /*! Poll first event
+     *  WARNING: YOU HAVE TO DELETE THE GIVEN POINTER YOURSELF
+     *           I had issues with polymosphism and std::shared_ptr
+     *  \todo fix upper warning message
+     */
+    static Event* pollEvent();
 
     /*! Add an event to the queue */
-    static void addEvent(Type type) { s_instance->m_events.push(type); }
+    static void addEvent(Event* event) { s_instance->m_events.push(event); }
 
   private:
 
@@ -36,7 +57,7 @@ class Events final
   private:
 
     /*! Events queue (FIFO) */
-    std::queue<Type> m_events;
+    std::queue<Event*> m_events;
 
     /*! Unique instance */
     static std::unique_ptr<Events> s_instance;

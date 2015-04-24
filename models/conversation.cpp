@@ -2,7 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "events/events.hpp"
+#include "events/end_talk_to_pnj.hpp"
 #include "graphics/fonts.hpp"
 #include "graphics/textures.hpp"
 #include "utils/files/file.hpp"
@@ -123,7 +123,7 @@ void Conversation::showSubConversation(unsigned int id)
   // Selection subconversation 0 means quitting conversation
   if(id == 0)
   {
-    events::Events::addEvent( events::Type::EndTalkToPNJ );
+    events::Events::addEvent( new events::EndTalkToPNJ() );
     return;
   }
 

@@ -14,31 +14,15 @@ void Events::init()
   s_instance.reset(new Events);
 }
 
-bool Events::pollEvent(Type &type)
+Event* Events::pollEvent()
 {
   if(s_instance->m_events.empty())
-    return false;
+    return nullptr;
 
-  type = s_instance->m_events.front();
+  auto& event = s_instance->m_events.front();
   s_instance->m_events.pop();
 
-  return true;
+  return event;
 }
-
-//Type stringToType(const std::string& input)
-//{
-//  static const std::map<std::string, Type> mapping = {
-//    "toMap", Type::ToMap
-//  };
-
-//  auto found = mapping.find(input);
-//  if( found == mapping.end() )
-//  {
-//    std::cerr << "type::stringToType error, unknown type: " << input << std::endl;
-//    return Type::None;
-//  }
-
-//  return found.second;
-//}
 
 }

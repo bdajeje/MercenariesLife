@@ -2,7 +2,9 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "events/events.hpp"
+#include "events/talk_to_pnj.hpp"
+#include "events/to_map.hpp"
+#include "events/utils.hpp"
 #include "graphics/textures.hpp"
 #include "utils/conversions.hpp"
 #include "utils/files/file.hpp"
@@ -62,21 +64,17 @@ Map::Map(const std::string& map_name)
       const auto& events = tile["events"];
       for(rapidjson::SizeType offset = 0; offset < events.Size(); ++offset)
       {
-         std::string type = events[offset]["type"].GetString();
-         getTile(x, y).addEvent(events::Type::PlayerEnter,
-                                std::bind(&Map::toMap, 2) );
+         std::tuple<events::Type, events::Event*> event = events::createFromJSON(events[offset]);
+         if(std::get<0>(event) == events::Type::None || !std::get<1>(event))
+           continue;
+
+         getTile(x, y).addEvent(std::get<0>(event), std::get<1>(event));
       }
     }
   }
 
   // Load PNJs
   loadPNJs(map_filepath + ".pnj");
-}
-
-// TEMPORARY
-void Map::toMap(int map_number)
-{
-  std::cout << "to map " << map_number << std::endl;
 }
 
 void Map::loadPNJs(const std::string& pnjs_filepath)
@@ -164,10 +162,16 @@ bool Map::move(int x, int y)
   if( !canMoveTo(new_pos_x, new_pos_y) )
     return false;
 
+  // Leave previous tile events
+  getCurrentTile().activate(events::Type::PlayerLeave);
+
   // Set new position
   m_tile_position.x = new_pos_x;
   m_tile_position.y = new_pos_y;
   m_movement_clock.restart();
+
+  // Go to new tile event
+  getCurrentTile().activate(events::Type::PlayerTo);
 
   return true;
 }
@@ -243,7 +247,7 @@ void Map::smoothViewMoveToDestination()
 void Map::moveDestinationReached()
 {
   // Player reached destination, trigger destination possible events
-  getTile(m_tile_position.x, m_tile_position.y).activate(events::Type::PlayerEnter);
+  getCurrentTile().activate(events::Type::PlayerHere);
 }
 
 unsigned int Map::timeTakenToMove() const
@@ -256,7 +260,7 @@ void Map::playerInteraction(utils::Direction direction)
 {
   auto pnj = getPNJ(direction);
   if( pnj )
-    events::Events::addEvent( events::Type::TalkToPNJ );
+    events::Events::addEvent( new events::TalkToPNJ(pnj) );
 }
 
 std::shared_ptr<models::PNJ> Map::getPNJ(utils::Direction direction) const

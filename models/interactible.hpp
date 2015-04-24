@@ -15,7 +15,7 @@ class Interactible
 
     Interactible() = default;
 
-    virtual ~Interactible() = default;
+    virtual ~Interactible();
 
     /*! Activate a specific event on this interactible
      *  \param type - to activate if available
@@ -24,11 +24,11 @@ class Interactible
     bool activate(events::Type type);
 
     /*! Register an new event for a given type */
-    void addEvent(events::Type type, std::function<void()> func);
+    void addEvent(events::Type type, events::Event* event);
 
   private:
 
-    std::map<events::Type, std::vector<std::function<void()>>> _events;
+    std::map<events::Type, std::vector<events::Event*>> _events;
 };
 
 }

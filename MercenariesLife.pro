@@ -19,7 +19,13 @@ SOURCES += main.cpp \
     events/events.cpp \
     models/conversation.cpp \
     events/keyboard_listener.cpp \
-    models/interactible.cpp
+    models/interactible.cpp \
+    events/talk_to_pnj.cpp \
+    game.cpp \
+    events/end_talk_to_pnj.cpp \
+    events/to_map.cpp \
+    events/playing_sound.cpp \
+    events/utils.cpp
 
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lboost_filesystem -lboost_regex -lboost_system
 
@@ -44,4 +50,10 @@ HEADERS += \
     events/events.hpp \
     models/conversation.hpp \
     events/keyboard_listener.hpp \
-    models/interactible.hpp
+    models/interactible.hpp \
+    events/talk_to_pnj.hpp \
+    game.hpp \
+    events/end_talk_to_pnj.hpp \
+    events/to_map.hpp \
+    events/playing_sound.hpp \
+    events/utils.hpp
