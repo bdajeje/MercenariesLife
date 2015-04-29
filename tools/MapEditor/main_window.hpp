@@ -6,6 +6,7 @@
 #include <QMainWindow>
 
 #include "map_area.hpp"
+#include "panel.hpp"
 #include "dialog/map_background.hpp"
 
 class MainWindow final : public QMainWindow
@@ -36,10 +37,14 @@ class MainWindow final : public QMainWindow
   private:
 
     MapArea* _map_area;
+    Panel* _panel;
     dialog::MapBackground* _map_background {nullptr};
 
     /*! Mapping shortut id to shortcut */
     std::map<Shortcut, QKeySequence> _shortcuts;
+
+    /*! Directory where to save files are located */
+    QString _map_dir;
 };
 
 #endif // MAIN_WINDOW_HPP

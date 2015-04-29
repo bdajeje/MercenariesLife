@@ -61,3 +61,31 @@ void MapArea::toggleGridVisibility()
   _grid_shown = !_grid_shown;
   repaint();
 }
+
+void MapArea::openMap(const rapidjson::Value& document, const QString& map_background_path)
+{
+  // Remove previous tiles
+  _tile_infos.clear();
+
+  // Read map size
+  auto size_x = document["size"]["w"].GetInt();
+  auto size_y = document["size"]["h"].GetInt();
+
+  // Create tiles
+  _tile_infos.resize(size_y);
+  for( auto& line : _tile_infos )
+    line.reserve(size_x);
+
+  // Reaad tiles info
+  const auto& tiles = document["tiles"];
+  for(rapidjson::SizeType offset = 0; offset < tiles.Size(); ++offset)
+  {
+    auto x = offset % size_x;
+    auto y = offset / size_x;
+    _tile_infos[y].emplace_back( new TileInfo );
+    _tile_infos[y][x]->setBlocking( tiles[offset]["blocking"].GetBool() );
+  }
+
+  // Display new background image
+  updateBackgroundImage(map_background_path);
+}

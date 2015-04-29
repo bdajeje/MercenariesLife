@@ -13,13 +13,23 @@ TEMPLATE = app
 
 CONFIG += c++11
 
+LIBS += -lboost_filesystem -lboost_system
+
 SOURCES += main.cpp\
         main_window.cpp \
     map_area.cpp \
     dialog/map_background.cpp \
-    dialog/dialog.cpp
+    dialog/dialog.cpp \
+    panel.cpp \
+    map_info.cpp \
+    tile_info.cpp \
+    utils/files.cpp
 
 HEADERS  += main_window.hpp \
     map_area.hpp \
     dialog/map_background.hpp \
-    dialog/dialog.hpp
+    dialog/dialog.hpp \
+    panel.hpp \
+    map_info.hpp \
+    tile_info.hpp \
+    utils/files.hpp
